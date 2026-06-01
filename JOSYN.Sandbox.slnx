@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="MyDemoCompany.MyDemoProduct.MyDemoJob/MyDemoCompany.MyDemoProduct.MyDemoJob.csproj" />
+  <Project Path="..\josyn-job-host\JOSYN.JobHost\JOSYN.JobHost.csproj" />
 </Solution>
