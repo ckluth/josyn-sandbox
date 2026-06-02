@@ -1,4 +1,5 @@
 @echo off
+CHCP 1252
 
 CALL "%~dp0detect-root.cmd"
 
