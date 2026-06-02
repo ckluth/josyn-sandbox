@@ -68,13 +68,19 @@ manually (`git status`, `git push`, etc.) and re-run.
 
 ## Configuration
 
-Machine-to-path detection lives in **one place only**: `.internal\detect-root.cmd`.
-All other scripts `CALL` it — nothing to touch elsewhere.
+All configuration lives in `.internal\` — nothing to touch in the scripts themselves.
+
+| File | Owns |
+|------|------|
+| `cfg-detect-root.cmd` | `ROOT` — maps hostname to the local DevGit path |
+| `cfg-repos-list.cmd` | `REPOS` — the ordered list of repositories |
+
+**`cfg-detect-root.cmd` hostname rules:**
 
 | Hostname pattern | ROOT |
 |-----------------|------|
 | `RZ-*` (starts-with, case-insensitive) | `C:\DevGit` |
 | *(anything else)* | `C:\Users\chris\OneDrive\DevGit` |
 
-To add a machine class, add one block to `detect-root.cmd` (template is in the file comments).
-To add or remove a repository, edit the `REPOS` variable near the top of each `.cmd` file.
+To add a machine class, add one block to `cfg-detect-root.cmd` (template is in the file comments).
+To add or remove a repository, edit `cfg-repos-list.cmd`.
