@@ -5,42 +5,34 @@ setlocal
 :: -------------------------------------------------------
 :: Aufruf:  build.cmd [Release|Debug]
 :: Default: Release
+:: Fuehrt build.cmd in allen Sub-Repos in der
+:: korrekten Abhaengigkeits-Reihenfolge aus.
 :: -------------------------------------------------------
 set "CONFIGURATION=%~1"
 if not defined CONFIGURATION set "CONFIGURATION=Release"
 
-:: Nur bekannte Werte erlauben
 if /i "%CONFIGURATION%" neq "Release" if /i "%CONFIGURATION%" neq "Debug" (
     echo [FEHLER] Unbekannte Konfiguration: "%CONFIGURATION%"
     echo          Erlaubt: Release, Debug
     exit /b 1
 )
 
-:: -------------------------------------------------------
-:: Suche nach einer .slnx-Datei eine Ebene hoeher
-:: -------------------------------------------------------
-set "SLNX_FILE="
-for %%F in ("%~dp0..\*.slnx") do (
-    set "SLNX_FILE=%%F"
-)
+set "ROOT=%~dp0.."
 
-if not defined SLNX_FILE (
-    echo [FEHLER] Keine .slnx-Datei in "%~dp0..\" gefunden.
-    exit /b 1
-)
+call :run_build "josyn-sandbox-demo-job"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-echo [INFO] Solution gefunden: %SLNX_FILE%
-echo [INFO] Starte dotnet build --configuration %CONFIGURATION% ...
-echo.
-
-dotnet build "%SLNX_FILE%" --configuration %CONFIGURATION%
-
-if %ERRORLEVEL% neq 0 (
-    echo.
-    echo [FEHLER] Build fehlgeschlagen. Exit-Code: %ERRORLEVEL%
-    exit /b %ERRORLEVEL%
-)
+call :run_build "josyn-sandbox-dev-host"
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 echo.
-echo [OK] Build erfolgreich abgeschlossen ^(%CONFIGURATION%^).
+echo [OK] Alle Sub-Repos erfolgreich gebaut (%CONFIGURATION%).
 exit /b 0
+
+:run_build
+echo.
+echo ======================================================
+echo  %~1
+echo ======================================================
+call "%ROOT%\%~1\.local-build\build.cmd" %CONFIGURATION%
+exit /b %ERRORLEVEL%

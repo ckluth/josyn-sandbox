@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Shows the local status of one or more git repositories at a glance.
 
@@ -19,7 +19,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-# ── helpers ──────────────────────────────────────────────────────────────────
+# -- helpers ------------------------------------------------------------------
 
 function Write-Header([string] $text) {
     Write-Host ""
@@ -150,7 +150,7 @@ function Write-RepoStatus([string] $repoPath) {
     }
 }
 
-# ── main ─────────────────────────────────────────────────────────────────────
+# -- main ---------------------------------------------------------------------
 
 $results = @()
 

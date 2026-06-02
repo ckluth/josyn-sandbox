@@ -1,3 +1,5 @@
+REM starter-convenience: clean table? get all repos in one batch! 
+
 chcp 1252
 @echo off
 

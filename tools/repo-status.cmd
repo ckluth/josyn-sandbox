@@ -1,7 +1,6 @@
 @echo off
 
-REM SET ROOT=C:\DevGit
-SET ROOT=C:\Users\chris\OneDrive\DevGit
+CALL "%~dp0detect-root.cmd"
 
 SET REPOS=^
     %ROOT%\josyn-platform ^
