@@ -1,6 +1,6 @@
 namespace JOSYN.Sandbox.DevHost;
 
-public sealed record JobSessionInfo : IJobSessionInfo
+public sealed record JobSession : IJobSession
 {
     public required Guid UID { get; init; }
     public required string JobTypeName { get; init; }

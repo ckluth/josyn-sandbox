@@ -4,9 +4,9 @@ namespace JOSYN.Sandbox.DevHost;
 
 public interface ISessionStore
 {
-    Result SaveNewSessionInfo(IJobSessionInfo jobSessionInfo);
+    Result SaveNewSession(IJobSession jobSession);
 
-    Result<IJobSessionInfo> GetSessionInfo(string sessionUid);
+    Result<IJobSession> GetSession(string sessionUid);
     
-    Result UpdateSessionInfo(IJobSessionInfo jobSessionInfo);
+    Result UpdateSession(IJobSession jobSession);
 }

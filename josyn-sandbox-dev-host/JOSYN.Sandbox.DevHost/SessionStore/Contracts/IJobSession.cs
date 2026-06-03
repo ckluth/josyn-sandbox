@@ -1,6 +1,6 @@
 namespace JOSYN.Sandbox.DevHost;
 
-public interface IJobSessionInfo
+public interface IJobSession
 {
     Guid UID { get; init; }
     string JobTypeName { get; init; }
