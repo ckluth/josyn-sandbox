@@ -16,7 +16,7 @@
         - .NET SDK installiert (net10.0)
         - Lokale NuGet-Feeds muessen existieren (local-packages/ je Repo).
           Das Skript baut alle Pakete selbst neu — beim allerersten Mal
-          muss der Feed zuvor einmalig bebuellt worden sein:
+          muss der Feed zuvor einmalig befuellt worden sein:
           josyn-sandbox\tools\convenience-scripts\nuget-total-rebuild.cmd
 
     Dokumentation: josyn-platform/decisions/ADR-012-maintainer-deployment.md
