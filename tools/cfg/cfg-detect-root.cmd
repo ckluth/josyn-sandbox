@@ -13,6 +13,7 @@ ECHO %COMPUTERNAME% | FINDSTR /B /I "RZ-" >NUL
 IF %ERRORLEVEL%==0 ( SET "ROOT=C:\DevGit" & GOTO :root_resolved )
 
 REM Fallback - personal machine
-SET "ROOT=C:\Users\chris\OneDrive\DevGit"
+REM SET "ROOT=C:\Users\chris\OneDrive\DevGit"
+SET "ROOT=C:\DevGit"
 
 :root_resolved

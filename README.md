@@ -45,7 +45,6 @@ josyn-sandbox/
 ├── <AssemblyName>/               ← directory name matches assembly name
 │   └── <AssemblyName>.csproj
 ├── JOSYN.Sandbox.slnx            ← solution file (initially empty; projects added as content arrives)
-├── Directory.Build.props         ← shared build output paths
 ├── nuget.config                  ← local package feed
 └── .local-build/
     ├── build.cmd
@@ -82,4 +81,4 @@ The build scripts are scaffold-only until the first project is added to the solu
 .local-build\test.cmd
 ```
 
-All build output goes to `C:\Temp\VS.OUT\JOSYN\` (configured in `Directory.Build.props`).
+All build output goes to `C:\Temp\VS.OUT\JOSYN\`.
