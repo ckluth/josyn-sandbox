@@ -29,3 +29,28 @@ dotnet run --project tools/doc-generator -- ..\josyn-platform\solution-architect
 ```
 
 Then open `C:\Temp\josyn-docs\index.html` in any browser.
+
+---
+
+## [`arg-gen/`](arg-gen/)
+
+A .NET 10 console tool that generates the full `local-arguments\` scaffold for a deployed
+job — `arguments-default.ini`, `_launcher.cmd`, and `arguments-default.cmd`. Called by
+`deploy-maintainer.ps1` after each job publish step.
+
+`local-arguments\` is a deploy-time artefact. It must not be committed to job repos.
+
+**Usage:**
+```
+dotnet run --project tools/arg-gen -- <job-exe-path> --cli-path <cli-exe-path> [--output-dir <dir>]
+```
+
+**Example** (from josyn-sandbox root):
+```
+dotnet run --project tools/arg-gen -- `
+    C:\ProgramData\JOSYN\JobRepository\Contoso.DemoProduct.DemoJob\Contoso.DemoProduct.DemoJob.exe `
+    --cli-path C:\ProgramData\JOSYN\CLI\JOSYN.Backend.CLI.exe
+```
+
+If the job has no `[JobEntryPoint]` parameters, no files are generated (exit 0).
+See ADR-014 for the full design rationale.

@@ -45,6 +45,7 @@ $Configuration     = if ($Debug) { "Debug" } else { "Release" }
 $DevRoot         = (Resolve-Path "$PSScriptRoot\..\..\..").Path
 $BackendRepoRoot = Join-Path $DevRoot "josyn-backend"
 $ContosoRepoRoot = Join-Path $DevRoot "josyn-contoso"
+$SandboxRepoRoot = Join-Path $DevRoot "josyn-sandbox"
 
 # ---------------------------------------------------------------------------
 # Hilfsfunktionen
@@ -174,6 +175,25 @@ Invoke-Publish `
     -OutputDirectory (Join-Path $JobRepositoryRoot "Contoso.DemoProduct.DemoJob")
 
 # ---------------------------------------------------------------------------
+# Schritt 7a: ArgGen — local-arguments scaffold fuer Contoso-Demojob generieren
+# ---------------------------------------------------------------------------
+Write-Host ""
+Write-Host "=== ArgGen: Contoso.DemoProduct.DemoJob ===" -ForegroundColor Cyan
+
+$demoJobExe = Join-Path $JobRepositoryRoot "Contoso.DemoProduct.DemoJob\Contoso.DemoProduct.DemoJob.exe"
+$cliExe     = Join-Path $CliRoot "JOSYN.Backend.CLI.exe"
+$argGenProj = Join-Path $SandboxRepoRoot "tools\arg-gen"
+
+dotnet run --project "$argGenProj" --configuration Release -- `
+    "$demoJobExe" --cli-path "$cliExe"
+
+if ($LASTEXITCODE -ne 0) {
+    throw "ArgGen fehlgeschlagen fuer Contoso.DemoProduct.DemoJob (Exit-Code $LASTEXITCODE)"
+}
+
+Write-Host "[OK] ArgGen: Contoso.DemoProduct.DemoJob" -ForegroundColor Green
+
+# ---------------------------------------------------------------------------
 # Schritt 8: bootstrap.ini kopieren und Pfade anpassen
 # ---------------------------------------------------------------------------
 Write-Host ""
@@ -205,4 +225,5 @@ Write-Host "  Backend-Root:    $BackendRoot"
 Write-Host "  CLI:             $CliRoot"
 Write-Host "  JAPServer:       $JapServerRoot"
 Write-Host "  Job-Repository:  $JobRepositoryRoot"
+Write-Host "  local-arguments: generiert von ArgGen"
 Write-Host ""
