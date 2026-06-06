@@ -48,7 +48,7 @@ pwsh -ExecutionPolicy Bypass -File deploy-maintainer.ps1 -SkipNugets
 3. Zielordner bereinigen (`C:\Programme\JOSYN`)
 4. `JOSYN.Jap.JAPServer` publizieren
 5. `JOSYN.Backend.CLI` publizieren
-6. `Contoso.Josyn.Adapter` → `adapters\` publizieren
+6. `Contoso.Josyn.Adapter` → `Adapters\` publizieren
 7. `Contoso.DemoProduct.DemoJob` → `JobRepository\` publizieren
 8. `josyn.bootstrap.ini` kopieren und Pfade auf Deployment-Ziele anpassen
 

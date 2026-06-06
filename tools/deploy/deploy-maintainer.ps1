@@ -22,7 +22,8 @@
     Dokumentation: josyn-platform/decisions/ADR-012-maintainer-deployment.md
 #>
 param(
-    [switch] $SkipNugets   # NuGet-Cache-Bereinigung und Pack-Schritte ueberspringen
+    [switch] $SkipNugets,  # NuGet-Cache-Bereinigung und Pack-Schritte ueberspringen
+    [switch] $Debug        # Debug-Konfiguration statt Release verwenden
 )
 
 Set-StrictMode -Version Latest
@@ -32,8 +33,10 @@ $ErrorActionPreference = "Stop"
 # Konfiguration — hier anpassen fuer andere Umgebungen
 # ---------------------------------------------------------------------------
 $BackendRoot       = "C:\ProgramData\JOSYN"
-$JobRepositoryRoot = "C:\ProgramData\JOSYN\JobRepository"
-$Configuration     = "Release"
+$CliRoot           = Join-Path $BackendRoot "CLI"
+$JapServerRoot     = Join-Path $BackendRoot "JAPServer"
+$JobRepositoryRoot = Join-Path $BackendRoot "JobRepository"
+$Configuration     = if ($Debug) { "Debug" } else { "Release" }
 
 # ---------------------------------------------------------------------------
 # Quell-Repo-Wurzeln (relativ zum Skriptstandort abgeleitet)
@@ -76,7 +79,7 @@ function Invoke-Publish {
 
     dotnet publish "$SolutionFile" `
         --configuration $Configuration `
-        --output "$OutputDirectory" `
+        --property:PublishDir="$OutputDirectory\" `
         --no-self-contained
 
     if ($LASTEXITCODE -ne 0) {
@@ -128,7 +131,9 @@ if (Test-Path $BackendRoot) {
 
 @(
     $BackendRoot,
-    (Join-Path $BackendRoot "adapters"),
+    $CliRoot,
+    $JapServerRoot,
+    (Join-Path $JapServerRoot "Adapters"),
     $JobRepositoryRoot,
     (Join-Path $JobRepositoryRoot "Contoso.DemoProduct.DemoJob")
 ) | ForEach-Object {
@@ -142,7 +147,7 @@ if (Test-Path $BackendRoot) {
 Invoke-Publish `
     -Label          "JOSYN.Jap.JAPServer" `
     -SolutionFile   "$BackendRepoRoot\josyn-backend-jap-server\JOSYN.Jap.JAPServer.slnx" `
-    -OutputDirectory $BackendRoot
+    -OutputDirectory $JapServerRoot
 
 # ---------------------------------------------------------------------------
 # Schritt 5: CLI bauen und deployen
@@ -150,7 +155,7 @@ Invoke-Publish `
 Invoke-Publish `
     -Label          "JOSYN.Backend.CLI" `
     -SolutionFile   "$BackendRepoRoot\josyn-backend-cli\JOSYN.Backend.CLI.slnx" `
-    -OutputDirectory $BackendRoot
+    -OutputDirectory $CliRoot
 
 # ---------------------------------------------------------------------------
 # Schritt 6: Contoso-Adapter bauen und in adapters\ deployen
@@ -158,7 +163,7 @@ Invoke-Publish `
 Invoke-Publish `
     -Label          "Contoso.Josyn.Adapter" `
     -SolutionFile   "$ContosoRepoRoot\contoso-adapter\Contoso.Josyn.Adapter.slnx" `
-    -OutputDirectory (Join-Path $BackendRoot "adapters")
+    -OutputDirectory (Join-Path $JapServerRoot "Adapters")
 
 # ---------------------------------------------------------------------------
 # Schritt 7: Contoso-Demojob bauen und ins Job-Repository deployen
@@ -178,11 +183,8 @@ $bootstrapSource = Join-Path $BackendRepoRoot "josyn.bootstrap.ini"
 $bootstrapDest   = Join-Path $BackendRoot "josyn.bootstrap.ini"
 
 $lines = Get-Content $bootstrapSource | ForEach-Object {
-    if ($_ -match "^JapServerExePath=") {
-        "JapServerExePath=$BackendRoot\JOSYN.Jap.JAPServer.exe"
-    }
-    elseif ($_ -match "^JobRepositoryRoot=") {
-        "JobRepositoryRoot=$JobRepositoryRoot"
+    if ($_ -match "^JapServerExePath=" -or $_ -match "^JobRepositoryRoot=") {
+        # omitted — paths are computed by convention from BackendRoot (ADR-012)
     }
     else {
         $_
@@ -200,5 +202,7 @@ Write-Host "============================================================" -Foreg
 Write-Host " Deployment abgeschlossen ($Configuration)" -ForegroundColor Green
 Write-Host "============================================================" -ForegroundColor Green
 Write-Host "  Backend-Root:    $BackendRoot"
+Write-Host "  CLI:             $CliRoot"
+Write-Host "  JAPServer:       $JapServerRoot"
 Write-Host "  Job-Repository:  $JobRepositoryRoot"
 Write-Host ""

@@ -9,7 +9,7 @@
 
     Zielstruktur:
         $BackendRoot\                           ← CLI + JAPServer
-        $BackendRoot\adapters\                  ← Adapter-Assemblies (ADR-009)
+        $BackendRoot\Adapters\                  ← Adapter-Assemblies (ADR-009)
         $JobRepositoryRoot\<JobName>\           ← Job-Executables
 
     Voraussetzung:
@@ -53,7 +53,7 @@ function Invoke-Publish {
 
     dotnet publish "$SolutionFile" `
         --configuration $Configuration `
-        --output "$OutputDirectory" `
+        --property:PublishDir="$OutputDirectory\" `
         --no-self-contained
 
     if ($LASTEXITCODE -ne 0) {
@@ -76,7 +76,7 @@ if (Test-Path $BackendRoot) {
 
 @(
     $BackendRoot,
-    (Join-Path $BackendRoot "adapters"),
+    (Join-Path $BackendRoot "Adapters"),
     $JobRepositoryRoot,
     (Join-Path $JobRepositoryRoot "Contoso.DemoProduct.DemoJob")
 ) | ForEach-Object {
@@ -103,7 +103,7 @@ Invoke-Publish `
 Invoke-Publish `
     -Label          "Contoso.Josyn.Adapter" `
     -SolutionFile   "$ContosoRepoRoot\contoso-adapter\Contoso.Josyn.Adapter.slnx" `
-    -OutputDirectory (Join-Path $BackendRoot "adapters")
+    -OutputDirectory (Join-Path $BackendRoot "Adapters")
 
 # ---------------------------------------------------------------------------
 # Schritt 4: Contoso-Demojob bauen und ins Job-Repository deployen
