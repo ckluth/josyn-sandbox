@@ -4,10 +4,10 @@ setlocal
 
 set "ROOT=%~dp0.."
 
-call :run_clean "josyn-sandbox-demo-job"
+call :run_clean "josyn-playground-demo-job"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-call :run_clean "josyn-sandbox-dev-host"
+call :run_clean "josyn-playground-dev-host"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 echo.

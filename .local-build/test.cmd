@@ -4,10 +4,10 @@ setlocal
 
 set "ROOT=%~dp0.."
 
-call :run_test "josyn-sandbox-demo-job"
+call :run_test "josyn-playground-demo-job"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-call :run_test "josyn-sandbox-dev-host"
+call :run_test "josyn-playground-dev-host"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 echo.

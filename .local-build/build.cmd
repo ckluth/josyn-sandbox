@@ -19,10 +19,10 @@ if /i "%CONFIGURATION%" neq "Release" if /i "%CONFIGURATION%" neq "Debug" (
 
 set "ROOT=%~dp0.."
 
-call :run_build "josyn-sandbox-demo-job"
+call :run_build "josyn-playground-demo-job"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-call :run_build "josyn-sandbox-dev-host"
+call :run_build "josyn-playground-dev-host"
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 echo.
